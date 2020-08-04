@@ -58,7 +58,7 @@ class DownloadStation(QWidget):
         taskListModel = QStandardItemModel()
 
         for task in taskList:
-            taskListModel.appendRow(QStandardItem(task["title"]))
+            taskListModel.appendRow(QStandardItem("%s : %s" %(task["title"], task["status"])))
 
         self.listTask.setModel(taskListModel)
 
