@@ -16,7 +16,7 @@ class DownloadStation(QWidget):
 
         self.btnDownload = QPushButton("Download")
         self.inputUrl = QTextEdit()
-        self.listWorking = QListView()
+        self.listTask = QListView()
 
         self.initUI()
         self.initSession()
@@ -25,7 +25,7 @@ class DownloadStation(QWidget):
         self.btnDownload.clicked.connect(self.registerDownload)
         self.inputUrl.setAcceptRichText(False)
 
-        self.mainLayout.addWidget(self.listWorking)
+        self.mainLayout.addWidget(self.listTask)
         self.mainLayout.addWidget(self.inputUrl)
         self.mainLayout.addWidget(self.btnDownload)
         self.mainLayout.addStretch()
@@ -47,6 +47,20 @@ class DownloadStation(QWidget):
             synoPW = jsonData["PW"]
 
         self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" %(synoURL, synoID, synoPW))
+        self.loadTaskList()
+
+    def loadTaskList(self):
+        responseJSON = self.curSession.get("http://defcon.or.kr:85/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list").text
+
+        taskJSON = json.loads(responseJSON)
+        taskList = taskJSON["data"]["tasks"]
+
+        taskListModel = QStandardItemModel()
+
+        for task in taskList:
+            taskListModel.appendRow(QStandardItem(task["title"]))
+
+        self.listTask.setModel(taskListModel)
 
     def registerDownload(self):
         inputURLs = self.inputUrl.toPlainText()
