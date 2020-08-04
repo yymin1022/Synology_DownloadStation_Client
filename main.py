@@ -2,7 +2,7 @@ import json
 import sys
 import requests
 
-from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QApplication, QListView, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
 
 class DownloadStation(QWidget):
@@ -20,8 +20,10 @@ class DownloadStation(QWidget):
         self.curSession = requests.session()
 
         self.mainLayout = QVBoxLayout()
+
         self.btnDownload = QPushButton("Download")
         self.inputUrl = QTextEdit()
+        self.listWorking = QListView()
 
         self.initUI(synoURL, synoID, synoPW)
 
@@ -31,6 +33,7 @@ class DownloadStation(QWidget):
         self.btnDownload.clicked.connect(self.registerDownload)
         self.inputUrl.setAcceptRichText(False)
 
+        self.mainLayout.addWidget(self.listWorking)
         self.mainLayout.addWidget(self.inputUrl)
         self.mainLayout.addWidget(self.btnDownload)
         self.mainLayout.addStretch()
