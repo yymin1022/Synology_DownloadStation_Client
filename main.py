@@ -1,6 +1,8 @@
 import json
 import requests
 import sys
+import time
+import threading
 
 from PyQt5.QtGui import QBrush, QColor, QStandardItem, QStandardItemModel
 from PyQt5.QtWidgets import QApplication, QListView, QPushButton, QTextEdit, QVBoxLayout, QWidget
@@ -52,8 +54,6 @@ class DownloadStation(QWidget):
     def loadTaskList(self):
         responseJSON = self.curSession.get("http://defcon.or.kr:85/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list&additional=transfer").text
 
-        # print(responseJSON)
-
         taskJSON = json.loads(responseJSON)
         taskList = taskJSON["data"]["tasks"]
 
@@ -80,6 +80,8 @@ class DownloadStation(QWidget):
             taskListModel.appendRow(item)
 
         self.listTask.setModel(taskListModel)
+
+        threading.Timer(2.0, self.loadTaskList).start()
 
     def registerDownload(self):
         inputURLs = self.inputUrl.toPlainText()
