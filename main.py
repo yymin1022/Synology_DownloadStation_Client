@@ -1,8 +1,8 @@
 import json
-import sys
 import requests
+import sys
 
-from PyQt5.QtGui import QStandardItem, QStandardItemModel
+from PyQt5.QtGui import QBrush, QColor, QStandardItem, QStandardItemModel
 from PyQt5.QtWidgets import QApplication, QListView, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
 
@@ -50,7 +50,9 @@ class DownloadStation(QWidget):
         self.loadTaskList()
 
     def loadTaskList(self):
-        responseJSON = self.curSession.get("http://defcon.or.kr:85/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list").text
+        responseJSON = self.curSession.get("http://defcon.or.kr:85/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list&additional=transfer").text
+
+        # print(responseJSON)
 
         taskJSON = json.loads(responseJSON)
         taskList = taskJSON["data"]["tasks"]
@@ -58,7 +60,24 @@ class DownloadStation(QWidget):
         taskListModel = QStandardItemModel()
 
         for task in taskList:
-            taskListModel.appendRow(QStandardItem("%s : %s" %(task["title"], task["status"])))
+            status = task["status"]
+            item = QStandardItem("%s / %s" % (task["title"], status))
+
+            if status == "downloading":
+                percentage = (task["additional"]["transfer"]["size_downloaded"] / task["size"]) * 100
+                item = QStandardItem("%s / %s / %d%% / %1.fMB/S" %(task["title"], status, percentage, task["additional"]["transfer"]["speed_download"] / 1000000))
+
+                item.setForeground(QBrush(QColor(0, 0, 0)))
+            elif status == "finished":
+                item.setForeground(QBrush(QColor(0, 0, 255)))
+            elif status == "waiting":
+                item.setForeground(QBrush(QColor(255, 128, 0)))
+            elif status == "error":
+                item.setForeground(QBrush(QColor(255, 0, 0)))
+            elif status == "paused":
+                item.setForeground(QBrush(QColor(128, 128, 128)))
+
+            taskListModel.appendRow(item)
 
         self.listTask.setModel(taskListModel)
 
