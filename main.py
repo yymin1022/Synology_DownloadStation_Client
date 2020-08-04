@@ -10,14 +10,6 @@ class DownloadStation(QWidget):
     def __init__(self):
         super().__init__()
 
-        with open('accounts.json', 'rt', encoding='UTF8') as json_file:
-            global synoURL, synoID, synoPW
-
-            jsonData = json.load(json_file)
-            synoURL = jsonData["Server"]
-            synoID = jsonData["ID"]
-            synoPW = jsonData["PW"]
-
         self.curSession = requests.session()
 
         self.mainLayout = QVBoxLayout()
@@ -46,6 +38,14 @@ class DownloadStation(QWidget):
         self.show()
 
     def initSession(self):
+        with open('accounts.json', 'rt', encoding='UTF8') as json_file:
+            global synoURL, synoID, synoPW
+
+            jsonData = json.load(json_file)
+            synoURL = jsonData["Server"]
+            synoID = jsonData["ID"]
+            synoPW = jsonData["PW"]
+
         self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" %(synoURL, synoID, synoPW))
 
     def registerDownload(self):
