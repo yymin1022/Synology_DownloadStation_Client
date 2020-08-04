@@ -4,8 +4,8 @@ import requests
 
 from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
-class DownloadStation(QWidget):
 
+class DownloadStation(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -17,24 +17,25 @@ class DownloadStation(QWidget):
             synoID = jsonData["ID"]
             synoPW = jsonData["PW"]
 
+        self.curSession = requests.session()
+
+        self.mainLayout = QVBoxLayout()
+        self.btnDownload = QPushButton("Download")
+        self.inputUrl = QTextEdit()
+
         self.initUI(synoURL, synoID, synoPW)
 
     def initUI(self, synoURL, synoID, synoPW):
-        self.curSession = requests.session()
-        self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" % (synoURL, synoID, synoPW))
-
-        self.btnDownload = QPushButton("Download")
-        self.inputUrl = QTextEdit()
+        self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" %(synoURL, synoID, synoPW))
 
         self.btnDownload.clicked.connect(self.registerDownload)
         self.inputUrl.setAcceptRichText(False)
 
-        mainLayout = QVBoxLayout()
-        mainLayout.addWidget(self.inputUrl)
-        mainLayout.addWidget(self.btnDownload)
-        mainLayout.addStretch()
+        self.mainLayout.addWidget(self.inputUrl)
+        self.mainLayout.addWidget(self.btnDownload)
+        self.mainLayout.addStretch()
 
-        self.setLayout(mainLayout)
+        self.setLayout(self.mainLayout)
 
         self.setWindowTitle("Download Station")
         self.move(300, 300)
@@ -42,35 +43,13 @@ class DownloadStation(QWidget):
         self.show()
 
     def registerDownload(self):
-        fileURL = []
-
         inputURLs = self.inputUrl.toPlainText()
-
         fileURL = inputURLs.split("\n")
 
         for URL in fileURL:
-            response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" % (synoURL),
-                                            data="api=SYNO.DownloadStation.Task&version=1&method=create&uri=%s"%(URL)).text
+            response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(synoURL),
+                                            data="api=SYNO.DownloadStation.Task&version=1&method=create&uri=%s" %(URL)).text
             print(response)
-
-
-# def main():
-#     with open('accounts.json', 'rt', encoding='UTF8') as json_file:
-#         jsonData = json.load(json_file)
-#         synoURL = jsonData["Server"]
-#         synoID = jsonData["ID"]
-#         synoPW = jsonData["PW"]
-#
-#     curSession = requests.session()
-#
-#     response = curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" %(synoURL, synoID, synoPW)).text
-#     print(response)
-#
-#     response = curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(synoURL), data="api=SYNO.DownloadStation.Task&version=1&method=create&uri=http://defcon.or.kr:85/sharing/qC2bgQIOt").text
-#     print(response)
-#
-#     response = curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list&additional=detail,file" %(synoURL)).text
-#     print(response)
 
 
 if __name__ == '__main__':
