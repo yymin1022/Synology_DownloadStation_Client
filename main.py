@@ -2,6 +2,7 @@ import json
 import sys
 import requests
 
+from PyQt5.QtGui import QStandardItem, QStandardItemModel
 from PyQt5.QtWidgets import QApplication, QListView, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
 
@@ -28,8 +29,6 @@ class DownloadStation(QWidget):
         self.initUI(synoURL, synoID, synoPW)
 
     def initUI(self, synoURL, synoID, synoPW):
-        self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" %(synoURL, synoID, synoPW))
-
         self.btnDownload.clicked.connect(self.registerDownload)
         self.inputUrl.setAcceptRichText(False)
 
@@ -44,6 +43,8 @@ class DownloadStation(QWidget):
         self.move(300, 300)
         self.resize(400, 200)
         self.show()
+
+        self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" % (synoURL, synoID, synoPW))
 
     def registerDownload(self):
         inputURLs = self.inputUrl.toPlainText()
