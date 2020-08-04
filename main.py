@@ -26,9 +26,10 @@ class DownloadStation(QWidget):
         self.inputUrl = QTextEdit()
         self.listWorking = QListView()
 
-        self.initUI(synoURL, synoID, synoPW)
+        self.initUI()
+        self.initSession()
 
-    def initUI(self, synoURL, synoID, synoPW):
+    def initUI(self):
         self.btnDownload.clicked.connect(self.registerDownload)
         self.inputUrl.setAcceptRichText(False)
 
@@ -44,7 +45,8 @@ class DownloadStation(QWidget):
         self.resize(400, 200)
         self.show()
 
-        self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" % (synoURL, synoID, synoPW))
+    def initSession(self):
+        self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" %(synoURL, synoID, synoPW))
 
     def registerDownload(self):
         inputURLs = self.inputUrl.toPlainText()
