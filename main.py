@@ -26,6 +26,7 @@ class DownloadStation(QWidget):
         self.btnDownload = QPushButton("Download")
         self.inputUrl = QTextEdit()
 
+        self.btnDownload.clicked.connect(self.registerDownload)
         self.inputUrl.setAcceptRichText(False)
 
         mainLayout = QVBoxLayout()
@@ -39,6 +40,18 @@ class DownloadStation(QWidget):
         self.move(300, 300)
         self.resize(400, 200)
         self.show()
+
+    def registerDownload(self):
+        fileURL = []
+
+        inputURLs = self.inputUrl.toPlainText()
+
+        fileURL = inputURLs.split("\n")
+
+        for URL in fileURL:
+            response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" % (synoURL),
+                                            data="api=SYNO.DownloadStation.Task&version=1&method=create&uri=%s"%(URL)).text
+            print(response)
 
 
 # def main():
