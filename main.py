@@ -9,15 +9,19 @@ import LoginDialog
 
 class main():
     def __init__(self):
-        with open('accounts.json', 'rt', encoding='UTF8') as json_file:
-            global synoURL, synoID, synoPW
+        try:
+            with open('accounts.json', 'rt', encoding='UTF8') as json_file:
+                global synoURL, synoID, synoPW
 
-            jsonData = json.load(json_file)
-            synoURL = jsonData["Server"]
-            synoID = jsonData["ID"]
-            synoPW = jsonData["PW"]
+                jsonData = json.load(json_file)
+                synoURL = jsonData["Server"]
+                synoID = jsonData["ID"]
+                synoPW = jsonData["PW"]
 
-        DownloadStation.DownloadStation(synoURL, synoID, synoPW)
+            self.window = DownloadStation.DownloadStation(synoURL, synoID, synoPW)
+        except FileNotFoundError:
+            self.window = LoginDialog.LoginDialog()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

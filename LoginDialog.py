@@ -1,34 +1,49 @@
-from PyQt5.QtWidgets import QPushButton, QTextEdit, QVBoxLayout, QWidget
-
-import requests
-
-import main
+from PyQt5.QtWidgets import QLabel, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
 
 class LoginDialog(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.mainLayout = QVBoxLayout()
+        self.loginLayout = QVBoxLayout()
 
         self.btnLogin = QPushButton("Login")
         self.inputID = QTextEdit()
         self.inputPW = QTextEdit()
+        self.inputURL = QTextEdit()
+        self.labelID = QLabel("DSM Account ID")
+        self.labelPW = QLabel("DSM Account PW")
+        self.labelURL = QLabel("DSM URL")
 
         self.initUI()
 
     def initUI(self):
+        self.btnLogin.clicked.connect(self.saveAccount)
         self.inputID.setAcceptRichText(False)
         self.inputPW.setAcceptRichText(False)
+        self.inputURL.setAcceptRichText(False)
 
-        self.mainLayout.addWidget(self.inputID)
-        self.mainLayout.addWidget(self.inputPW)
-        self.mainLayout.addWidget(self.btnLogin)
-        self.mainLayout.addStretch()
+        self.loginLayout.addWidget(self.labelURL)
+        self.loginLayout.addWidget(self.inputURL)
+        self.loginLayout.addWidget(self.labelID)
+        self.loginLayout.addWidget(self.inputID)
+        self.loginLayout.addWidget(self.labelPW)
+        self.loginLayout.addWidget(self.inputPW)
+        self.loginLayout.addWidget(self.btnLogin)
+        self.loginLayout.addStretch()
 
-        self.mainUI.setLayout(self.mainLayout)
+        self.setLayout(self.loginLayout)
 
-        self.mainUI.setWindowTitle("Download Station")
-        self.mainUI.move(300, 300)
-        self.mainUI.resize(400, 200)
-        self.mainUI.show()
+        self.setWindowTitle("Login Required")
+        self.move(300, 300)
+        self.resize(400, 200)
+        self.show()
+
+    def saveAccount(self):
+        self.synoURL = self.inputURL.toPlainText()
+        self.synoID = self.inputID.toPlainText()
+        self.synoPW = self.inputPW.toPlainText()
+
+        with open('accounts.json', 'w', encoding='UTF8') as json_file:
+            fileData = "{\n\"Server\":\"%s\",\n\"ID\": \"%s\",\n\"PW\": \"%s\"\n}"%(self.synoURL, self.synoID, self.synoPW)
+            json_file.write(fileData)

@@ -7,8 +7,6 @@ import sys
 import time
 import threading
 
-import LoginDialog
-
 
 class DownloadStation(QWidget):
     def __init__(self, url, id, pw):
@@ -46,7 +44,7 @@ class DownloadStation(QWidget):
         self.show()
 
     def initSession(self):
-        self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" %(self.synoURL, self.synoID, self.synoPW))
+        sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" %(self.synoURL, self.synoID, self.synoPW))
         self.loadTaskList()
 
     def loadTaskList(self):
