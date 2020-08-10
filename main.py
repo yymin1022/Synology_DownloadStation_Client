@@ -14,14 +14,19 @@ class main():
                 global synoURL, synoID, synoPW
 
                 jsonData = json.load(json_file)
-                synoURL = jsonData["Server"]
-                synoID = jsonData["ID"]
-                synoPW = jsonData["PW"]
+                self.synoURL = jsonData["Server"]
+                self.synoID = jsonData["ID"]
+                self.synoPW = jsonData["PW"]
 
-            self.window = DownloadStation.DownloadStation(synoURL, synoID, synoPW)
+            self.openDownloadStation()
         except FileNotFoundError:
-            self.window = LoginDialog.LoginDialog()
+            self.openLogin()
 
+    def openDownloadStation(self):
+        self.window = DownloadStation.DownloadStation(self.synoURL, self.synoID, self.synoPW)
+
+    def openLogin(self):
+        self.window = LoginDialog.LoginDialog()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

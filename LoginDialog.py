@@ -1,5 +1,7 @@
 from PyQt5.QtWidgets import QLabel, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
+import main
+
 
 class LoginDialog(QWidget):
     def __init__(self):

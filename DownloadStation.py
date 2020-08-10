@@ -1,11 +1,13 @@
 from PyQt5.QtGui import QBrush, QColor, QStandardItem, QStandardItemModel
-from PyQt5.QtWidgets import QApplication, QListView, QPushButton, QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QApplication, QListView, QMessageBox, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
 import json
 import requests
 import sys
 import time
 import threading
+
+import main
 
 
 class DownloadStation(QWidget):
@@ -50,7 +52,10 @@ class DownloadStation(QWidget):
         if isSessionSuccess:
             self.loadTaskList()
         else:
-            pass
+            reinitializeAccount = QMessageBox.question(self, "Login Error", "Need to Login again.", QMessageBox.Yes)
+            if reinitializeAccount == QMessageBox.Yes:
+                main.main.openLogin(main)
+                self.close()
 
     def loadTaskList(self):
         responseJSON = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list&additional=transfer" %(self.synoURL)).text
