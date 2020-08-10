@@ -68,6 +68,7 @@ class DownloadStation(QWidget):
         for task in taskList:
             status = task["status"]
             item = QStandardItem("%s / %s" %(task["title"], status))
+            item.setEditable(False)
 
             if status == "downloading":
                 percentage = 0
