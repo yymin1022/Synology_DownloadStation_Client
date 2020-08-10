@@ -49,3 +49,6 @@ class LoginDialog(QWidget):
         with open('accounts.json', 'w', encoding='UTF8') as json_file:
             fileData = "{\n\"Server\":\"%s\",\n\"ID\": \"%s\",\n\"PW\": \"%s\"\n}"%(self.synoURL, self.synoID, self.synoPW)
             json_file.write(fileData)
+
+        main.main.openDownloadStation(main.main, self.synoURL, self.synoID, self.synoPW)
+        self.close()

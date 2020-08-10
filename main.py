@@ -18,12 +18,12 @@ class main():
                 self.synoID = jsonData["ID"]
                 self.synoPW = jsonData["PW"]
 
-            self.openDownloadStation()
+            self.openDownloadStation(self.synoURL, self.synoID, self.synoPW)
         except FileNotFoundError:
             self.openLogin()
 
-    def openDownloadStation(self):
-        self.window = DownloadStation.DownloadStation(self.synoURL, self.synoID, self.synoPW)
+    def openDownloadStation(self, synoURL, synoID, synoPW):
+        self.window = DownloadStation.DownloadStation(synoURL, synoID, synoPW)
 
     def openLogin(self):
         self.window = LoginDialog.LoginDialog()
