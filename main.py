@@ -28,6 +28,7 @@ class main():
     def openLogin(self):
         self.window = LoginDialog.LoginDialog()
 
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     execute = main()
