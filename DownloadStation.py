@@ -45,7 +45,12 @@ class DownloadStation(QWidget):
 
     def initSession(self):
         sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" %(self.synoURL, self.synoID, self.synoPW))
-        self.loadTaskList()
+        isSessionSuccess = json.loads(sessionData.text)["success"]
+
+        if isSessionSuccess:
+            self.loadTaskList()
+        else:
+            pass
 
     def loadTaskList(self):
         responseJSON = self.curSession.get("http://defcon.or.kr:85/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list&additional=transfer").text
