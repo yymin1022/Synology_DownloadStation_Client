@@ -53,7 +53,7 @@ class DownloadStation(QWidget):
             pass
 
     def loadTaskList(self):
-        responseJSON = self.curSession.get("http://defcon.or.kr:85/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list&additional=transfer").text
+        responseJSON = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list&additional=transfer" %(self.synoURL)).text
 
         taskJSON = json.loads(responseJSON)
         taskList = taskJSON["data"]["tasks"]
@@ -62,7 +62,7 @@ class DownloadStation(QWidget):
 
         for task in taskList:
             status = task["status"]
-            item = QStandardItem("%s / %s" % (task["title"], status))
+            item = QStandardItem("%s / %s" %(task["title"], status))
 
             if status == "downloading":
                 percentage = (task["additional"]["transfer"]["size_downloaded"] / task["size"]) * 100
@@ -85,18 +85,19 @@ class DownloadStation(QWidget):
         threading.Timer(2.0, self.loadTaskList).start()
 
     def registerDownload(self):
-        file = open('test.torrent', 'rb')
-        upload = {'file': file}
-        obj = {'data': "api=SYNO.DownloadStation2.Task&version=1&method=create&file=1234&type=file&create_list=true"}
-
-        response = self.curSession.post(url="%s/webapi/DownloadStation/entry.cgi" %(synoURL), data=obj,
-                                        files=upload).text
-        print(response)
-
-        # inputURLs = self.inputUrl.toPlainText()
-        # fileURL = inputURLs.split("\n")
+        # file = open('test.torrent', 'rb')
+        # upload = {'file': file}
+        # obj = {'data': "api=SYNO.DownloadStation2.Task&version=1&method=create&file=1234&type=file&create_list=true"}
         #
-        # for URL in fileURL:
-        #     response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(synoURL),
-        #                                     data="api=SYNO.DownloadStation.Task&version=1&method=create&uri=%s" %(URL)).text
-        #     print(response)
+        # response = self.curSession.post(url="%s/webapi/DownloadStation/entry.cgi" %(synoURL),
+        #                                 data=obj,
+        #                                 files=upload).text
+        # print(response)
+
+        inputURLs = self.inputUrl.toPlainText()
+        fileURL = inputURLs.split("\n")
+
+        for URL in fileURL:
+            response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(synoURL),
+                                            data="api=SYNO.DownloadStation.Task&version=1&method=create&uri=%s" %(URL)).text
+            print(response)
