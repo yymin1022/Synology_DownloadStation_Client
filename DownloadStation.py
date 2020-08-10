@@ -70,7 +70,9 @@ class DownloadStation(QWidget):
             item = QStandardItem("%s / %s" %(task["title"], status))
 
             if status == "downloading":
-                percentage = (task["additional"]["transfer"]["size_downloaded"] / task["size"]) * 100
+                percentage = 0
+                if task["size"] != 0:
+                    percentage = (task["additional"]["transfer"]["size_downloaded"] / task["size"]) * 100
                 item = QStandardItem("%s / %s / %d%% / %1.fMB/S" %(task["title"], status, percentage, task["additional"]["transfer"]["speed_download"] / 1000000))
 
                 item.setForeground(QBrush(QColor(0, 0, 0)))
