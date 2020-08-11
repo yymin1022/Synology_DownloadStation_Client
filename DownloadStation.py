@@ -75,7 +75,7 @@ class DownloadStation(QWidget):
                 if task["size"] != 0:
                     percentage = (task["additional"]["transfer"]["size_downloaded"] / task["size"]) * 100
                 item = QStandardItem("%s / %s / %d%% / %1.fMB/S" %(task["title"], status, percentage, task["additional"]["transfer"]["speed_download"] / 1000000))
-
+                item.setEditable(False)
                 item.setForeground(QBrush(QColor(0, 0, 0)))
             elif status == "finished":
                 item.setForeground(QBrush(QColor(0, 0, 255)))
