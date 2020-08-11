@@ -23,6 +23,7 @@ class DownloadStation(QWidget):
         self.mainLayout = QVBoxLayout()
 
         self.btnDownload = QPushButton("Download")
+        self.btnReload = QPushButton("Reload")
         self.inputUrl = QTextEdit()
         self.listTask = QListView()
 
@@ -31,8 +32,10 @@ class DownloadStation(QWidget):
 
     def initUI(self):
         self.btnDownload.clicked.connect(self.registerDownload)
+        self.btnReload.clicked.connect(self.loadTaskList)
         self.inputUrl.setAcceptRichText(False)
 
+        self.mainLayout.addWidget(self.btnReload)
         self.mainLayout.addWidget(self.listTask)
         self.mainLayout.addWidget(self.inputUrl)
         self.mainLayout.addWidget(self.btnDownload)
@@ -89,8 +92,6 @@ class DownloadStation(QWidget):
             taskListModel.appendRow(item)
 
         self.listTask.setModel(taskListModel)
-
-        threading.Timer(2.0, self.loadTaskList).start()
 
     def registerDownload(self):
         # file = open('test.torrent', 'rb')
