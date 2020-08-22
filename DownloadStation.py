@@ -1,11 +1,8 @@
 from PyQt5.QtGui import QBrush, QColor, QStandardItem, QStandardItemModel
-from PyQt5.QtWidgets import QApplication, QListView, QMessageBox, QPushButton, QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QListView, QMessageBox, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
 import json
 import requests
-import sys
-import time
-import threading
 
 import main
 
@@ -34,6 +31,7 @@ class DownloadStation(QWidget):
         self.btnDownload.clicked.connect(self.registerDownload)
         self.btnReload.clicked.connect(self.loadTaskList)
         self.inputUrl.setAcceptRichText(False)
+        self.listTask.clicked.connect(self.manageTask)
 
         self.mainLayout.addWidget(self.btnReload)
         self.mainLayout.addWidget(self.listTask)
@@ -92,6 +90,9 @@ class DownloadStation(QWidget):
             taskListModel.appendRow(item)
 
         self.listTask.setModel(taskListModel)
+
+    def manageTask(self, modelIndex):
+        print(modelIndex.row())
 
     def registerDownload(self):
         # file = open('test.torrent', 'rb')
