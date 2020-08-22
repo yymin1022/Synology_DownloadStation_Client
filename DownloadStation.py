@@ -59,6 +59,8 @@ class DownloadStation(QWidget):
                 self.close()
 
     def loadTaskList(self):
+        self.taskIDList = []
+
         responseJSON = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list&additional=transfer" %(self.synoURL)).text
 
         taskJSON = json.loads(responseJSON)
@@ -88,6 +90,7 @@ class DownloadStation(QWidget):
                 item.setForeground(QBrush(QColor(128, 128, 128)))
 
             taskListModel.appendRow(item)
+            self.taskIDList.append(task["id"])
 
         self.listTask.setModel(taskListModel)
 
