@@ -119,7 +119,6 @@ class DownloadStation(QWidget):
         elif curAction == actionCancel:
             response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=delete&id=%s&force_complete=false" %(self.synoURL, self.taskIDList[curIndex])).text
 
-        print(response)
         self.loadTaskList()
 
     def registerDownload(self):
