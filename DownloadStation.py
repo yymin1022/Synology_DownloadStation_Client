@@ -101,27 +101,36 @@ class DownloadStation(QWidget):
             taskListModel.appendRow(item)
             self.taskIDList.append(task["id"])
 
+        if len(self.taskIDList) == 0:
+            item = QStandardItem("진행중인 작업이 없습니다.")
+            item.setEditable(False)
+            item.setForeground(QBrush(QColor(128, 128, 128)))
+            taskListModel.appendRow(item)
+
         self.listTask.setModel(taskListModel)
 
     def manageTask(self, modelIndex):
-        curIndex = modelIndex.row()
+        if modelIndex.data() != "진행중인 작업이 없습니다.":
+            curIndex = modelIndex.row()
 
-        menu = QMenu(self)
-        actionPause = menu.addAction("일시정지")
-        actionResume = menu.addAction("이어받기")
-        actionCancel = menu.addAction("삭제")
+            menu = QMenu(self)
+            actionPause = menu.addAction("일시정지")
+            actionResume = menu.addAction("이어받기")
+            actionCancel = menu.addAction("삭제")
 
-        curAction = menu.exec_(QCursor.pos())
-        if curAction == actionPause:
-            response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=pause&id=%s" %(self.synoURL, self.taskIDList[curIndex])).text
-        elif curAction == actionResume:
-            response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=resume&id=%s" %(self.synoURL, self.taskIDList[curIndex])).text
-        elif curAction == actionCancel:
-            cancelFile = QMessageBox.question(self, "작업 삭제", "선택한 작업을 취소하고 다운로드중이던 파일을 삭제합니다.", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-            if cancelFile == QMessageBox.Yes:
-                response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=delete&id=%s&force_complete=false" %(self.synoURL, self.taskIDList[curIndex])).text
+            curAction = menu.exec_(QCursor.pos())
+            if curAction == actionPause:
+                response = self.curSession.get(
+                    "%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=pause&id=%s" %(self.synoURL, self.taskIDList[curIndex])).text
+            elif curAction == actionResume:
+                response = self.curSession.get(
+                    "%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=resume&id=%s" %(self.synoURL, self.taskIDList[curIndex])).text
+            elif curAction == actionCancel:
+                cancelFile = QMessageBox.question(self, "작업 삭제", "선택한 작업을 취소하고 다운로드중이던 파일을 삭제합니다.", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                if cancelFile == QMessageBox.Yes:
+                    response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=delete&id=%s&force_complete=false" %(self.synoURL, self.taskIDList[curIndex])).text
 
-        self.loadTaskList()
+            self.loadTaskList()
 
     def registerDownload(self):
         inputURLs = self.inputUrl.toPlainText()
