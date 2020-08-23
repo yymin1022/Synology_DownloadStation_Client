@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QApplication
 
-import hashlib
 import json
 import sys
 
