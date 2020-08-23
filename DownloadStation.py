@@ -1,4 +1,4 @@
-from PyQt5.QtGui import QBrush, QColor, QStandardItem, QStandardItemModel
+from PyQt5.QtGui import QBrush, QColor, QCursor, QStandardItem, QStandardItemModel
 from PyQt5.QtWidgets import QListView, QMenu, QMessageBox, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
 import json
@@ -100,7 +100,7 @@ class DownloadStation(QWidget):
         menu = QMenu(self)
         copy_action = menu.addAction("복사하기")
         quit_action = menu.addAction("Quit")
-        action = menu.exec_()
+        action = menu.exec_(QCursor.pos())
         if action == quit_action:
             pass
         elif action == copy_action:
