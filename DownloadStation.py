@@ -127,19 +127,22 @@ class DownloadStation(QWidget):
 
         for URL in fileURL:
             if URL.endswith(".torrent"):
-                file = open(URL, 'rb')
+                try:
+                    file = open(URL, 'rb')
 
-                args = {
-                    'api': 'SYNO.DownloadStation.Task',
-                    'version': '1',
-                    'method': 'create',
-                    'session': 'DownloadStation'
-                }
-                files = {'file': (URL, file)}
+                    args = {
+                        'api': 'SYNO.DownloadStation.Task',
+                        'version': '1',
+                        'method': 'create',
+                        'session': 'DownloadStation'
+                    }
+                    files = {'file': (URL, file)}
 
-                response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(self.synoURL),
-                                                data=args,
-                                                files=files).text
+                    response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(self.synoURL),
+                                                    data=args,
+                                                    files=files).text
+                except FileNotFoundError:
+                    QMessageBox.question(self, "파일 오류", "%s를 찾을 수 없습니다." %(URL), QMessageBox.Yes)
             else:
                 response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(self.synoURL),
                                                 data="api=SYNO.DownloadStation.Task&version=1&method=create&uri=%s" %(URL)).text
