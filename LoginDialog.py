@@ -24,6 +24,7 @@ class LoginDialog(QWidget):
         self.inputID.setAcceptRichText(False)
         self.inputPW.setAcceptRichText(False)
         self.inputURL.setAcceptRichText(False)
+        self.inputURL.setPlaceholderText("http://hello.synology.me")
 
         self.loginLayout.addWidget(self.labelURL)
         self.loginLayout.addWidget(self.inputURL)
