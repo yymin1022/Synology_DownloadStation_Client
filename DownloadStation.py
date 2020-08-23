@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QListView, QMenu, QMessageBox, QPushButton, QTextEdi
 
 import json
 import requests
+import threading
 
 import main
 
@@ -19,8 +20,8 @@ class DownloadStation(QWidget):
 
         self.mainLayout = QVBoxLayout()
 
-        self.btnDownload = QPushButton("Download")
-        self.btnReload = QPushButton("Reload")
+        self.btnDownload = QPushButton("다운로드")
+        self.btnReload = QPushButton("새로고침")
         self.inputUrl = QTextEdit()
         self.listTask = QListView()
 
@@ -47,16 +48,23 @@ class DownloadStation(QWidget):
         self.show()
 
     def initSession(self):
-        sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" %(self.synoURL, self.synoID, self.synoPW))
-        isSessionSuccess = json.loads(sessionData.text)["success"]
+        try:
+            sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" %(self.synoURL, self.synoID, self.synoPW))
+            isSessionSuccess = json.loads(sessionData.text)["success"]
 
-        if isSessionSuccess:
-            self.loadTaskList()
-        else:
-            reinitializeAccount = QMessageBox.question(self, "Login Error", "Need to Login again.", QMessageBox.Yes)
+            if isSessionSuccess:
+                self.loadTaskList()
+            else:
+                reinitializeAccount = QMessageBox.question(self, "로그인 불가", "권한이 없거나 존재하지 않는 계정입니다.\n다시 로그인 해주세요.", QMessageBox.Yes)
+                if reinitializeAccount == QMessageBox.Yes:
+                    main.main.openLogin(main)
+                    self.close()
+        except:
+            reinitializeAccount = QMessageBox.question(self, "서버 오류", "서버 주소가 올바르지 않거나 접속할 수 없습니다.", QMessageBox.Yes)
             if reinitializeAccount == QMessageBox.Yes:
                 main.main.openLogin(main)
                 self.close()
+
 
     def loadTaskList(self):
         self.taskIDList = []
