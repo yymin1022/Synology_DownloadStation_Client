@@ -109,7 +109,7 @@ class DownloadStation(QWidget):
         menu = QMenu(self)
         actionPause = menu.addAction("일시정지")
         actionResume = menu.addAction("이어받기")
-        actionCancel = menu.addAction("취소")
+        actionCancel = menu.addAction("삭제")
 
         curAction = menu.exec_(QCursor.pos())
         if curAction == actionPause:
