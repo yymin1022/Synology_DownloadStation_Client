@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QListView, QMenu, QMessageBox, QPushButton, QTextEdi
 
 import json
 import requests
-import threading
 
 import main
 

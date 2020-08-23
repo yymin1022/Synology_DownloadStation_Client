@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QLabel, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
+import AESCipher
 import main
 
 
@@ -48,8 +49,9 @@ class LoginDialog(QWidget):
         self.synoPW = self.inputPW.toPlainText()
 
         with open('accounts.json', 'w', encoding='UTF8') as json_file:
-            fileData = "{\n\"Server\":\"%s\",\n\"ID\": \"%s\",\n\"PW\": \"%s\"\n}"%(self.synoURL, self.synoID, self.synoPW)
-            json_file.write(fileData)
+            fileData = "{\n\"Server\":\"%s\",\n\"ID\": \"%s\",\n\"PW\": \"%s\"\n}" %(self.synoURL, self.synoID, self.synoPW)
+            encryptData = AESCipher.AESCipher().encrypt_str(fileData)
+            json_file.write(encryptData)
 
         main.main.openDownloadStation(main.main, self.synoURL, self.synoID, self.synoPW)
         self.close()
