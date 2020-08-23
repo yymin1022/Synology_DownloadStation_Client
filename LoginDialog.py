@@ -48,7 +48,7 @@ class LoginDialog(QWidget):
         self.synoID = self.inputID.toPlainText()
         self.synoPW = self.inputPW.toPlainText()
 
-        with open('accounts.json', 'w', encoding='UTF8') as json_file:
+        with open('accounts.uum', 'w', encoding='UTF8') as json_file:
             fileData = "{\n\"Server\":\"%s\",\n\"ID\": \"%s\",\n\"PW\": \"%s\"\n}" %(self.synoURL, self.synoID, self.synoPW)
             encryptData = AESCipher.AESCipher().encrypt_str(fileData)
             json_file.write(encryptData)

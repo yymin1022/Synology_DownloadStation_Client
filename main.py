@@ -15,19 +15,15 @@ class main():
 
     def initLogin(self):
         try:
-            with open('accounts.json', 'rt', encoding='UTF8') as json_file:
+            with open('accounts.uum', 'rt', encoding='UTF8') as json_file:
                 self.loadData = AESCipher.AESCipher().decrypt_str(json_file.readline())
-
-                print(self.loadData)
 
                 self.encryptData = json.loads(self.loadData)
                 self.synoURL = self.encryptData["Server"]
                 self.synoID = self.encryptData["ID"]
                 self.synoPW = self.encryptData["PW"]
 
-            print("RESULT : %s %s %s" %(self.synoURL, self.synoID, self.synoPW))
-
-            self.openDownloadStation()
+            self.openDownloadStation(self.synoURL, self.synoID, self.synoPW)
         except FileNotFoundError:
             self.openLogin()
 
