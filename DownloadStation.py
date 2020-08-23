@@ -143,7 +143,6 @@ class DownloadStation(QWidget):
             else:
                 response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(self.synoURL),
                                                 data="api=SYNO.DownloadStation.Task&version=1&method=create&uri=%s" %(URL)).text
-            print(response)
             self.loadTaskList()
 
         self.inputUrl.clear()
