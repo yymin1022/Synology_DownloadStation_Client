@@ -109,38 +109,27 @@ class DownloadStation(QWidget):
         print(self.taskIDList[curIndex])
 
     def registerDownload(self):
-        file = open('test.torrent', 'rb')
+        inputURLs = self.inputUrl.toPlainText()
+        fileURL = inputURLs.split("\n")
 
-        args = {
-            'api': 'SYNO.DownloadStation.Task',
-            'version': '1',
-            'method': 'create',
-            'session': 'DownloadStation'
-        }
-        files = {'file': ('test.torrent', file)}
+        for URL in fileURL:
+            if URL.endswith(".torrent"):
+                file = open(URL, 'rb')
 
-        response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(self.synoURL),
-                                        data=args,
-                                        files=files).text
-        print(response)
+                args = {
+                    'api': 'SYNO.DownloadStation.Task',
+                    'version': '1',
+                    'method': 'create',
+                    'session': 'DownloadStation'
+                }
+                files = {'file': (URL, file)}
 
-        # with open('test.torrent', 'rb') as payload:
-        #     args = {
-        #         'api': 'SYNO.DownloadStation.Task',
-        #         'version': '1',
-        #         'method': 'create',
-        #         'session': 'DownloadStation'
-        #     }
-        #     files = {'file': ('test.torrent', payload)}
-        #     r = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(self.synoURL), data=args, files=files, verify=False)
-        #     print(r.text)
+                response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(self.synoURL),
+                                                data=args,
+                                                files=files).text
+            else:
+                response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(self.synoURL),
+                                                data="api=SYNO.DownloadStation.Task&version=1&method=create&uri=%s" %(URL)).text
+            print(response)
 
-        # inputURLs = self.inputUrl.toPlainText()
-        # fileURL = inputURLs.split("\n")
-        #
-        # for URL in fileURL:
-        #     response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(self.synoURL),
-        #                                     data="api=SYNO.DownloadStation.Task&version=1&method=create&uri=%s" %(URL)).text
-        #     print(response)
-        #
-        # self.inputUrl.clear()
+        self.inputUrl.clear()
