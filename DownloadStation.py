@@ -50,7 +50,8 @@ class DownloadStation(QWidget):
 
     def initSession(self):
         try:
-            sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie" %(self.synoURL, self.synoID, self.synoPW))
+            sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie"
+                                              %(self.synoURL, self.synoID, self.synoPW))
             isSessionSuccess = json.loads(sessionData.text)["success"]
 
             if isSessionSuccess:
@@ -70,7 +71,8 @@ class DownloadStation(QWidget):
     def loadTaskList(self):
         self.taskIDList = []
 
-        responseJSON = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list&additional=transfer" %(self.synoURL)).text
+        responseJSON = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list&additional=transfer"
+                                           %(self.synoURL)).text
 
         taskJSON = json.loads(responseJSON)
         taskList = taskJSON["data"]["tasks"]
@@ -120,15 +122,16 @@ class DownloadStation(QWidget):
 
             curAction = menu.exec_(QCursor.pos())
             if curAction == actionPause:
-                response = self.curSession.get(
-                    "%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=pause&id=%s" %(self.synoURL, self.taskIDList[curIndex])).text
+                response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=pause&id=%s"
+                                               %(self.synoURL, self.taskIDList[curIndex]))
             elif curAction == actionResume:
-                response = self.curSession.get(
-                    "%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=resume&id=%s" %(self.synoURL, self.taskIDList[curIndex])).text
+                response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=resume&id=%s"
+                                               %(self.synoURL, self.taskIDList[curIndex]))
             elif curAction == actionCancel:
                 cancelFile = QMessageBox.question(self, "작업 삭제", "선택한 작업을 취소하고 다운로드중이던 파일을 삭제합니다.", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
                 if cancelFile == QMessageBox.Yes:
-                    response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=delete&id=%s&force_complete=false" %(self.synoURL, self.taskIDList[curIndex])).text
+                    response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=delete&id=%s&force_complete=false"
+                                                   %(self.synoURL, self.taskIDList[curIndex]))
 
             self.loadTaskList()
 
@@ -149,14 +152,17 @@ class DownloadStation(QWidget):
                     }
                     files = {'file': (URL, file)}
 
-                    response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(self.synoURL),
+                    response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi"
+                                                        %(self.synoURL),
                                                     data=args,
-                                                    files=files).text
+                                                    files=files)
                 except FileNotFoundError:
                     QMessageBox.question(self, "파일 오류", "%s를 찾을 수 없습니다." %(URL), QMessageBox.Yes)
             else:
-                response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi" %(self.synoURL),
-                                                data="api=SYNO.DownloadStation.Task&version=1&method=create&uri=%s" %(URL)).text
+                response = self.curSession.post(url="%s/webapi/DownloadStation/task.cgi"
+                                                    %(self.synoURL),
+                                                data="api=SYNO.DownloadStation.Task&version=1&method=create&uri=%s"
+                                                     %(URL))
             self.loadTaskList()
 
         self.inputUrl.clear()
