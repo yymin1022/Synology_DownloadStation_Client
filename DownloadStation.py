@@ -98,15 +98,20 @@ class DownloadStation(QWidget):
         curIndex = modelIndex.row()
 
         menu = QMenu(self)
-        copy_action = menu.addAction("복사하기")
-        quit_action = menu.addAction("Quit")
-        action = menu.exec_(QCursor.pos())
-        if action == quit_action:
-            pass
-        elif action == copy_action:
-            print("copy...")
+        actionPause = menu.addAction("일시정지")
+        actionResume = menu.addAction("이어받기")
+        actionCancel = menu.addAction("취소")
 
-        print(self.taskIDList[curIndex])
+        curAction = menu.exec_(QCursor.pos())
+        if curAction == actionPause:
+            response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=pause&id=%s" %(self.synoURL, self.taskIDList[curIndex])).text
+        elif curAction == actionResume:
+            response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=resume&id=%s" %(self.synoURL, self.taskIDList[curIndex])).text
+        elif curAction == actionCancel:
+            response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=delete&id=%s&force_complete=false" %(self.synoURL, self.taskIDList[curIndex])).text
+
+        print(response)
+        self.loadTaskList()
 
     def registerDownload(self):
         inputURLs = self.inputUrl.toPlainText()
