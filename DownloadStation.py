@@ -32,6 +32,7 @@ class DownloadStation(QWidget):
         self.btnDownload.clicked.connect(self.registerDownload)
         self.btnReload.clicked.connect(self.loadTaskList)
         self.inputUrl.setAcceptRichText(False)
+        self.inputUrl.setPlaceholderText("ex) https://test.synology.me/a93hfGF\nex) movie.torrent")
         self.listTask.clicked.connect(self.manageTask)
 
         self.mainLayout.addWidget(self.btnReload)
