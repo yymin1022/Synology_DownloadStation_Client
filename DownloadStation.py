@@ -117,7 +117,9 @@ class DownloadStation(QWidget):
         elif curAction == actionResume:
             response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=resume&id=%s" %(self.synoURL, self.taskIDList[curIndex])).text
         elif curAction == actionCancel:
-            response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=delete&id=%s&force_complete=false" %(self.synoURL, self.taskIDList[curIndex])).text
+            cancelFile = QMessageBox.question(self, "작업 삭제", "선택한 작업을 취소하고 다운로드중이던 파일을 삭제합니다.", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            if cancelFile == QMessageBox.Yes:
+                response = self.curSession.get("%s/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=delete&id=%s&force_complete=false" %(self.synoURL, self.taskIDList[curIndex])).text
 
         self.loadTaskList()
 
