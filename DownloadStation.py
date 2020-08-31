@@ -58,6 +58,7 @@ class DownloadStation(QWidget):
                     if btnOK:
                         self.otpCode = str(codeInput)
                     else:
+                        # Pushed Cancel Button : Re-show Dialog
                         continue
                     sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStation&format=cookie&otp_code=%s"
                                                       %(self.synoURL, self.synoID, self.synoPW, self.otpCode))
@@ -70,8 +71,10 @@ class DownloadStation(QWidget):
                                                                    "OTP 코드가 올바르지 않습니다.",
                                                                    QMessageBox.Yes, QMessageBox.No)
                         if reinitializeAccount == QMessageBox.Yes:
+                            # Re-input Code
                             continue
                         elif reinitializeAccount == QMessageBox.No:
+                            # Finish
                             self.close()
                     break
             else:
