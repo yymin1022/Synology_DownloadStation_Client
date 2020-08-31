@@ -1,5 +1,5 @@
 from PyQt5.QtGui import QBrush, QColor, QCursor, QStandardItem, QStandardItemModel
-from PyQt5.QtWidgets import QListView, QMenu, QMessageBox, QPushButton, QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QInputDialog, QListView, QMenu, QMessageBox, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
 import json
 import requests
@@ -51,22 +51,43 @@ class DownloadStation(QWidget):
     def initSession(self):
         try:
             if self.isOTP == "True":
-                sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStation&format=cookie&otp_code=%s"
-                                                  %(self.synoURL, self.synoID, self.synoPW, "373997"))
-                self.isSessionSuccess = json.loads(sessionData.text)["success"]
+                self.otpCode = ""
+                while True:
+                    codeInput, btnOK = QInputDialog.getText(self, 'OTP 인증', 'OTP 코드를 입력하세요.')
+
+                    if btnOK:
+                        self.otpCode = str(codeInput)
+                    else:
+                        continue
+                    sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStation&format=cookie&otp_code=%s"
+                                                      %(self.synoURL, self.synoID, self.synoPW, self.otpCode))
+                    self.isSessionSuccess = json.loads(sessionData.text)["success"]
+
+                    if self.isSessionSuccess:
+                        self.loadTaskList()
+                    else:
+                        reinitializeAccount = QMessageBox.question(self, "OTP 오류",
+                                                                   "OTP 코드가 올바르지 않습니다.",
+                                                                   QMessageBox.Yes, QMessageBox.No)
+                        reinitializeAccount.set
+                        if reinitializeAccount == QMessageBox.Yes:
+                            continue
+                        elif reinitializeAccount == QMessageBox.No:
+                            self.close()
+                    break
             else:
                 sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStation&format=cookie"
                                                   %(self.synoURL, self.synoID, self.synoPW))
                 self.isSessionSuccess = json.loads(sessionData.text)["success"]
 
-            if self.isSessionSuccess:
-                self.loadTaskList()
-            else:
-                reinitializeAccount = QMessageBox.question(self, "로그인 불가", "권한이 없거나 존재하지 않는 계정입니다.\n다시 로그인 해주세요.",
-                                                           QMessageBox.Yes)
-                if reinitializeAccount == QMessageBox.Yes:
-                    main.main.openLogin(main)
-                    self.close()
+                if self.isSessionSuccess:
+                    self.loadTaskList()
+                else:
+                    reinitializeAccount = QMessageBox.question(self, "로그인 불가", "권한이 없거나 존재하지 않는 계정입니다.\n다시 로그인 해주세요.",
+                                                               QMessageBox.Yes)
+                    if reinitializeAccount == QMessageBox.Yes:
+                        main.main.openLogin(main)
+                        self.close()
         except:
             reinitializeAccount = QMessageBox.question(self, "서버 오류", "서버 주소가 올바르지 않거나 접속할 수 없습니다.", QMessageBox.Yes)
             if reinitializeAccount == QMessageBox.Yes:
