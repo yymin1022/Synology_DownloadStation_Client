@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QLabel, QPushButton, QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QCheckBox, QLabel, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
 import AESCipher
 import main
@@ -11,6 +11,7 @@ class LoginDialog(QWidget):
         self.loginLayout = QVBoxLayout()
 
         self.btnLogin = QPushButton("Login")
+        self.checkOTP = QCheckBox("Use OTP?")
         self.inputID = QTextEdit()
         self.inputPW = QTextEdit()
         self.inputURL = QTextEdit()
@@ -33,6 +34,7 @@ class LoginDialog(QWidget):
         self.loginLayout.addWidget(self.inputID)
         self.loginLayout.addWidget(self.labelPW)
         self.loginLayout.addWidget(self.inputPW)
+        self.loginLayout.addWidget(self.checkOTP)
         self.loginLayout.addWidget(self.btnLogin)
         self.loginLayout.addStretch()
 
