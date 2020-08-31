@@ -22,12 +22,12 @@ class main():
                 self.synoID = self.encryptData["ID"]
                 self.synoPW = self.encryptData["PW"]
 
-            self.openDownloadStation(self.synoURL, self.synoID, self.synoPW)
+            self.openDownloadStation(self.synoURL, self.synoID, self.synoPW, self.isOTP)
         except FileNotFoundError:
             self.openLogin()
 
-    def openDownloadStation(self, synoURL, synoID, synoPW):
-        self.window = DownloadStation.DownloadStation(synoURL, synoID, synoPW)
+    def openDownloadStation(self, synoURL, synoID, synoPW, isOTP):
+        self.window = DownloadStation.DownloadStation(synoURL, synoID, synoPW, isOTP)
 
     def openLogin(self):
         self.window = LoginDialog.LoginDialog()

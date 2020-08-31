@@ -53,5 +53,5 @@ class LoginDialog(QWidget):
             encryptData = AESCipher.AESCipher().encrypt_str(fileData)
             json_file.write(encryptData)
 
-        main.main.openDownloadStation(main.main, self.synoURL, self.synoID, self.synoPW)
+        main.main.openDownloadStation(main.main, self.synoURL, self.synoID, self.synoPW, self.isOTP)
         self.close()
