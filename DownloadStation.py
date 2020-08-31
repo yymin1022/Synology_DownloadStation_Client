@@ -69,7 +69,6 @@ class DownloadStation(QWidget):
                         reinitializeAccount = QMessageBox.question(self, "OTP 오류",
                                                                    "OTP 코드가 올바르지 않습니다.",
                                                                    QMessageBox.Yes, QMessageBox.No)
-                        reinitializeAccount.set
                         if reinitializeAccount == QMessageBox.Yes:
                             continue
                         elif reinitializeAccount == QMessageBox.No:
