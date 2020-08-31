@@ -51,9 +51,11 @@ class DownloadStation(QWidget):
     def initSession(self):
         try:
             if self.isOTP == "True":
-                pass
+                sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStation&format=cookie&otp_code=%s"
+                                                  %(self.synoURL, self.synoID, self.synoPW, "373997"))
+                self.isSessionSuccess = json.loads(sessionData.text)["success"]
             else:
-                sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStationn&format=cookie"
+                sessionData = self.curSession.get("%s/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=%s&passwd=%s&session=DownloadStation&format=cookie"
                                                   %(self.synoURL, self.synoID, self.synoPW))
                 self.isSessionSuccess = json.loads(sessionData.text)["success"]
 
