@@ -21,7 +21,7 @@ class main():
                 self.synoURL = self.encryptData["Server"]
                 self.synoID = self.encryptData["ID"]
                 self.synoPW = self.encryptData["PW"]
-                self.isOTPP = self.encryptData["OTP"]
+                self.isOTP = self.encryptData["OTP"]
 
             self.openDownloadStation(self.synoURL, self.synoID, self.synoPW, self.isOTP)
         except FileNotFoundError:

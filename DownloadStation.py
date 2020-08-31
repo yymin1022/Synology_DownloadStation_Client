@@ -8,12 +8,13 @@ import main
 
 
 class DownloadStation(QWidget):
-    def __init__(self, url, id, pw):
+    def __init__(self, url, id, pw, otp):
         super().__init__()
 
         self.synoURL = url
         self.synoID = id
         self.synoPW = pw
+        self.isOTP = otp
 
         self.curSession = requests.session()
 
