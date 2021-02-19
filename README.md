@@ -1,4 +1,4 @@
-# Synology Download Station Client for PC (Windows / Linux / Mac)
+﻿# Synology Download Station Client for PC (Windows / Linux / Mac)
 
 <img src="Images/login.png" width="30%" height="30%" alt="Screenshot"></img>
 <img src="Images/main_1.png" width="30%" height="30%" alt="Screenshot"></img>
